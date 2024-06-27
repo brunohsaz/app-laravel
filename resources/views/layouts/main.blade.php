@@ -7,7 +7,6 @@
 
     <title>@yield('title')</title>
 
-
     <!-- Fonte do Google -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
 
@@ -16,9 +15,7 @@
 
     <!-- CSS da aplicação -->
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="/js/script.js">
-
-    </script>
+    <script src="/js/scripts.js"></script>
 </head>
 
 <body>
@@ -45,13 +42,20 @@
             </div>
         </nav>
     </header>
-
-    @yield('content')
+    <main>
+        <div class="container-fluid">
+            <div class="row">
+                @if(session('msg'))
+                <p class="msg">{{ session('msg') }}</p>
+                @endif
+                @yield('content')
+            </div>
+        </div>
+    </main>
     <footer>
-        <p>HDC Events &copy; 2024</p>
+        <p>HDC Events &copy; 2020</p>
     </footer>
-
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
 </body>
 
 </html>
