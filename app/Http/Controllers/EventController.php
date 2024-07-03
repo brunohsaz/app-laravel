@@ -12,16 +12,17 @@ class EventController extends Controller
 
     public function index()
     {
+
         $search = request('search');
 
         if ($search) {
+
             $events = Event::where([
                 ['title', 'like', '%' . $search . '%']
             ])->get();
         } else {
             $events = Event::all();
         }
-
 
         return view('welcome', ['events' => $events, 'search' => $search]);
     }
@@ -77,6 +78,7 @@ class EventController extends Controller
 
     public function dashboard()
     {
+
         $user = auth()->user();
 
         $events = $user->events;
@@ -86,8 +88,43 @@ class EventController extends Controller
 
     public function destroy($id)
     {
+
         Event::findOrFail($id)->delete();
 
         return redirect('/dashboard')->with('msg', 'Evento excluído com sucesso!');
+    }
+
+    public function edit($id)
+    {
+
+        $event = Event::findOrFail($id);
+        
+        $event->date = new \DateTime($event->date);
+
+        return view('events.edit', ['event' => $event]);
+    }
+
+    public function update(Request $request)
+    {
+
+        $data = $request->all();
+
+        // Image Upload
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+
+            $requestImage = $request->image;
+
+            $extension = $requestImage->extension();
+
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+
+            $requestImage->move(public_path('img/events'), $imageName);
+
+            $data['image'] = $imageName;
+        }
+
+        Event::findOrFail($request->id)->update($data);
+
+        return redirect('/dashboard')->with('msg', 'Evento editado com sucesso!');
     }
 }
